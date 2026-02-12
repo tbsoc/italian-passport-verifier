@@ -31,29 +31,12 @@ export default function VerificationCard() {
     setShowQrFallback(false);
   };
 
-  const handleDeepLink = (url: string) => {
-    window.location.href = url;
-  };
-
-  const handleShare = async (url: string) => {
-    try {
-      await navigator.share({
-        title: "Verify Italian Passport",
-        text: "Tap to verify your Italian nationality",
-        url: url,
-      });
-    } catch {
-      handleCopy(url);
-    }
-  };
-
   const handleCopy = async (url: string) => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     } catch {
-      // Fallback for older browsers
       const textArea = document.createElement("textarea");
       textArea.value = url;
       document.body.appendChild(textArea);
@@ -97,19 +80,8 @@ export default function VerificationCard() {
         .disclose("nationality")
         .done();
 
-      // Always store the URL for sharing/QR fallback
+      // Store URL - do NOT auto-open the app, let user tap the button
       setQueryUrl(url);
-
-      if (isMobile) {
-        // On mobile, try to open ZKPassport app directly
-        const deepLink = `zkpassport://verify?url=${encodeURIComponent(url)}`;
-        setMessage("📱 Opening ZKPassport app...");
-
-        // Small delay to let the message render, then open deep link
-        setTimeout(() => {
-          handleDeepLink(deepLink);
-        }, 300);
-      }
 
       onRequestReceived(() => {
         setMessage("📱 Request received! Generating proof...");
@@ -225,21 +197,13 @@ export default function VerificationCard() {
           {/* MOBILE: Action buttons */}
           {isMobile && (
             <div className="space-y-3">
-              <button
-                onClick={() => handleDeepLink(`zkpassport://verify?url=${encodeURIComponent(queryUrl)}`)}
-                className="w-full bg-italian-green text-white font-bold py-4 px-6 rounded-xl text-base min-h-[48px] active:scale-95 transition-transform"
+              {/* Use the URL directly as an <a> link - the SDK URL already redirects to ZKPassport app */}
+              <a
+                href={queryUrl}
+                className="block w-full bg-italian-green text-white font-bold py-4 px-6 rounded-xl text-base min-h-[48px] active:scale-95 transition-transform text-center"
               >
                 Open in ZKPassport App
-              </button>
-
-              {typeof navigator !== "undefined" && "share" in navigator && (
-                <button
-                  onClick={() => handleShare(queryUrl)}
-                  className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl text-sm min-h-[48px] active:scale-95 transition-transform"
-                >
-                  📤 Share Verification Link
-                </button>
-              )}
+              </a>
 
               <button
                 onClick={() => handleCopy(queryUrl)}
