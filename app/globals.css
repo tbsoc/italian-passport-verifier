@@ -50,3 +50,29 @@ body::before {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(206, 43, 55, 0.3);
 }
+
+/* Mobile touch feedback - disable hover effects on touch devices */
+@media (hover: none) {
+  .italian-button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .pizza-celebration {
+    animation: none;
+  }
+
+  .italian-button {
+    transition: none;
+  }
+}
+
+/* Mobile gradient - vertical for better readability */
+@media (max-width: 640px) {
+  body {
+    background: linear-gradient(180deg, #009246 0%, #FFFFFF 50%, #CE2B37 100%);
+  }
+}
