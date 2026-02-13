@@ -205,6 +205,12 @@ export default function VerificationCard() {
                 Open in ZKPassport App
               </a>
 
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-left">
+                <p className="text-blue-800 text-xs">
+                  After completing verification in the ZKPassport app, <strong>come back to this page</strong> to see your result. It will update automatically.
+                </p>
+              </div>
+
               <button
                 onClick={() => handleCopy(queryUrl)}
                 className="w-full bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-xl text-sm min-h-[48px] active:scale-95 transition-transform"
